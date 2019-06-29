@@ -1,4 +1,4 @@
-﻿namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+﻿namespace Compiler.Com.Vb.OwnLang.Parser
 {
     public sealed class Token
     {
