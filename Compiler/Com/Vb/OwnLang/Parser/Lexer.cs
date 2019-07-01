@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Compiler.Com.Vb.OwnLang.Parser
@@ -36,6 +37,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 var current = Peek(0);
                 if (char.IsDigit(current)) TokenizeNumber();
+                else if (char.IsLetter(current)) TokenizeWord();
                 else if (current == '#')
                 {
                     Next();
@@ -53,18 +55,30 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
             return _tokens;
         }
+       
 
         private void TokenizeNumber()
         {
             var buffer = new StringBuilder();
             var current = Peek(0);
-            while (char.IsDigit(current))
+            
+            while (true)
             {
+                if (current == '.')
+                {
+                    if (buffer.ToString().IndexOf(".", StringComparison.Ordinal) != -1) throw new Exception("Invalid float number");
+                }
+                else if (!char.IsDigit(current))
+                {
+                    break;
+                }
                 buffer.Append(current);
                 current = Next();
             }
             AddToken(TokenType.NUMBER, buffer.ToString());
         }
+
+        
 
         private void TokenizeHexNumber()
         {
@@ -88,6 +102,22 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             var position = OperatorChars.IndexOf(Peek(0));
             AddToken(_operatorTokens[position]);
             Next();
+        }
+
+        private void TokenizeWord()
+        {
+            var buffer = new StringBuilder();
+            var current = Peek(0);
+            while (true)
+            {
+                if (!char.IsLetterOrDigit(current) && (current != '_') && (current != '$'))
+                {
+                    break;
+                }
+                buffer.Append(current);
+                current = Next();
+            }
+            AddToken(TokenType.WORD, buffer.ToString());
         }
 
         private char Next()

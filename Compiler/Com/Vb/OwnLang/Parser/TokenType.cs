@@ -5,6 +5,7 @@
 
         NUMBER,
         HEX_NUMBER,
+        WORD,
 
         PLUS,
         MINUS,

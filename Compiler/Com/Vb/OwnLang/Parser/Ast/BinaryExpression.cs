@@ -28,6 +28,6 @@
         }
 
 
-        public override string ToString() => $"{_expr1} {_operation} {_expr2}";
+        public override string ToString() => $"[{_expr1} {_operation} {_expr2}]";
     }
 }

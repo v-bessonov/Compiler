@@ -6,7 +6,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 {
     public class Parser
     {
-        private static Token EOF = new Token(TokenType.EOF, "");
+        private static Token EOF = new Token(TokenType.EOF, string.Empty);
 
         private readonly List<Token> _tokens;
         private readonly int _size;
@@ -101,7 +101,11 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
             if (Match(TokenType.HEX_NUMBER))
             {
-                return new NumberExpression(Convert.ToInt64(current.Text));
+                return new NumberExpression(long.Parse(current.Text, System.Globalization.NumberStyles.HexNumber));
+            }
+            if (Match(TokenType.WORD))
+            {
+                return new ConstantExpression(current.Text);
             }
             if (Match(TokenType.LPAREN))
             {
