@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Compiler.Com.Vb.OwnLang.Parser.Ast;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Parser
 {
@@ -19,15 +20,43 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             _size = tokens.Count;
         }
 
-        public List<IExpression> Parse()
+        public List<IStatement> Parse()
         {
-            var result = new List<IExpression>();
+            List<IStatement> result = new List<IStatement>();
             while (!Match(TokenType.EOF))
             {
-                result.Add(Expression());
+                result.Add(Statement());
             }
             return result;
         }
+
+        private IStatement Statement()
+        {
+            return AssignmentStatement();
+        }
+
+        private IStatement AssignmentStatement()
+        {
+            // WORD EQ
+            var current = Get(0);
+            if (Match(TokenType.WORD) && Get(0).Type == TokenType.EQ)
+            {
+                var variable = current.Text;
+                Consume(TokenType.EQ);
+                return new AssignmentStatement(variable, Expression());
+            }
+            throw new Exception("Unknown statement");
+        }
+
+        //public List<IExpression> Parse()
+        //{
+        //    var result = new List<IExpression>();
+        //    while (!Match(TokenType.EOF))
+        //    {
+        //        result.Add(Expression());
+        //    }
+        //    return result;
+        //}
 
         private IExpression Expression()
         {
@@ -103,9 +132,13 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return new NumberExpression(long.Parse(current.Text, System.Globalization.NumberStyles.HexNumber));
             }
+            //if (Match(TokenType.WORD))
+            //{
+            //    return new ConstantExpression(current.Text);
+            //}
             if (Match(TokenType.WORD))
             {
-                return new ConstantExpression(current.Text);
+                return new VariableExpression(current.Text);
             }
             if (Match(TokenType.LPAREN))
             {
@@ -122,6 +155,14 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             if (type != current.Type) return false;
             _pos++;
             return true;
+        }
+
+        private Token Consume(TokenType type)
+        {
+            Token current = Get(0);
+            if (type != current.Type) throw new Exception($"Token {current} doesn\'t match {type}");
+            _pos++;
+            return current;
         }
 
         private Token Get(int relativePosition)

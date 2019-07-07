@@ -1,5 +1,6 @@
 ﻿using System;
 using Compiler.Com.Vb.OwnLang.Lib;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 {

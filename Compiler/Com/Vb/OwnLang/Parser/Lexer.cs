@@ -7,13 +7,14 @@ namespace Compiler.Com.Vb.OwnLang.Parser
     public sealed class Lexer
     {
 
-        private const string OperatorChars = "+-*/()";
+        private const string OperatorChars = "+-*/()=";
 
         private readonly TokenType[] _operatorTokens =
         {
             TokenType.PLUS, TokenType.MINUS,
             TokenType.STAR, TokenType.SLASH,
             TokenType.LPAREN, TokenType.RPAREN,
+            TokenType.EQ
         };
 
         private readonly string _input;

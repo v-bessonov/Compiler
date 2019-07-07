@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Parser;
 using Compiler.Com.Vb.OwnLang.Parser.Ast;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler
 {
@@ -13,17 +15,33 @@ namespace Compiler
             const string input2 = "(2 + 2) * #f";
             const string input3 = "(GOLDEN_RATIO + 2) * #f";
             const string input4 = "GOLDEN_RATIO";
-            var tokens = new Lexer(input3).Tokenize();
+            const string input5 = "word = 2 + 2\nword2 = PI + word";
+            var tokens = new Lexer(input5).Tokenize();
+            
             foreach (var token in tokens)
             {
                 Console.WriteLine(token);
             }
 
-            var expressions = new Parser(tokens).Parse();
-            foreach (var expr in expressions)
+            //var expressions = new Parser(tokens).Parse();
+            //foreach (var expr in expressions)
+            //{
+            //    Console.WriteLine($"{expr} = {expr.Eval()}");
+            //}
+
+            var statements = new Parser(tokens).Parse();
+            foreach (var statement in statements)
             {
-                Console.WriteLine($"{expr} = {expr.Eval()}");
+                Console.WriteLine(statement);
             }
+            foreach (var statement in statements)
+            {
+                statement.Execute();
+            }
+
+
+            Console.WriteLine($"word = {Variables.Get("word")}");
+            Console.WriteLine($"word2 = {Variables.Get("word2")}");
             Console.ReadLine();
         }
     }

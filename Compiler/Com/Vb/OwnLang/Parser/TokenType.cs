@@ -11,6 +11,7 @@
         MINUS,
         STAR,
         SLASH,
+        EQ,
 
         LPAREN, // (
         RPAREN, // )
