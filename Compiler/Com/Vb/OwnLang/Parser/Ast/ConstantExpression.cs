@@ -13,7 +13,19 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             _name = name;
         }
 
-        public double Eval()
+        //public double Eval()
+        //{
+        //    if (!Constants.IsExists(_name)) throw new Exception("Constant does not exists");
+        //    return Constants.Get(_name);
+        //}
+
+        //public double Eval()
+        //{
+        //    if (!Constants.IsExists(_name)) throw new Exception("Constant does not exists");
+        //    return Constants.Get(_name);
+        //}
+
+        public IValue Eval()
         {
             if (!Constants.IsExists(_name)) throw new Exception("Constant does not exists");
             return Constants.Get(_name);

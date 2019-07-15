@@ -39,6 +39,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
                 var current = Peek(0);
                 if (char.IsDigit(current)) TokenizeNumber();
                 else if (char.IsLetter(current)) TokenizeWord();
+                else if (current == '"') TokenizeText();
                 else if (current == '#')
                 {
                     Next();
@@ -79,7 +80,33 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             AddToken(TokenType.NUMBER, buffer.ToString());
         }
 
-        
+        private void TokenizeText()
+        {
+            Next();// skip "
+            var buffer = new StringBuilder();
+            var current = Peek(0);
+            while (true)
+            {
+                if (current == '\\')
+                {
+                    current = Next();
+                    switch (current)
+                    {
+                        case '"': current = Next(); buffer.Append('"'); continue;
+                        case 'n': current = Next(); buffer.Append('\n'); continue;
+                        case 't': current = Next(); buffer.Append('\t'); continue;
+                    }
+                    buffer.Append('\\');
+                    continue;
+                }
+                if (current == '"') break;
+                buffer.Append(current);
+                current = Next();
+            }
+            Next(); // skip closing "
+
+            AddToken(TokenType.TEXT, buffer.ToString());
+        }
 
         private void TokenizeHexNumber()
         {
@@ -118,7 +145,17 @@ namespace Compiler.Com.Vb.OwnLang.Parser
                 buffer.Append(current);
                 current = Next();
             }
-            AddToken(TokenType.WORD, buffer.ToString());
+
+            var word = buffer.ToString();
+            if (word =="print")
+            {
+                AddToken(TokenType.PRINT);
+            }
+            else
+            {
+                AddToken(TokenType.WORD, buffer.ToString());
+            }
+            
         }
 
         private char Next()

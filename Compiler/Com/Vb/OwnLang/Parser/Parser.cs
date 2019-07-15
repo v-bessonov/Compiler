@@ -32,6 +32,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
         private IStatement Statement()
         {
+            if (Match(TokenType.PRINT))
+            {
+                return new PrintStatement(Expression());
+            }
             return AssignmentStatement();
         }
 
@@ -124,13 +128,21 @@ namespace Compiler.Com.Vb.OwnLang.Parser
         private IExpression Primary()
         {
             var current = Get(0);
+            //if (Match(TokenType.NUMBER))
+            //{
+            //    return new NumberExpression(Convert.ToDouble(current.Text));
+            //}
             if (Match(TokenType.NUMBER))
             {
-                return new NumberExpression(Convert.ToDouble(current.Text));
+                return new ValueExpression(Convert.ToDouble(current.Text));
             }
+            //if (Match(TokenType.HEX_NUMBER))
+            //{
+            //    return new NumberExpression(long.Parse(current.Text, System.Globalization.NumberStyles.HexNumber));
+            //}
             if (Match(TokenType.HEX_NUMBER))
             {
-                return new NumberExpression(long.Parse(current.Text, System.Globalization.NumberStyles.HexNumber));
+                return new ValueExpression(long.Parse(current.Text, System.Globalization.NumberStyles.HexNumber));
             }
             //if (Match(TokenType.WORD))
             //{
@@ -139,6 +151,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             if (Match(TokenType.WORD))
             {
                 return new VariableExpression(current.Text);
+            }
+            if (Match(TokenType.TEXT))
+            {
+                return new ValueExpression(current.Text);
             }
             if (Match(TokenType.LPAREN))
             {

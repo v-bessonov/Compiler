@@ -1,7 +1,10 @@
-﻿namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces
+﻿using Compiler.Com.Vb.OwnLang.Lib;
+
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces
 {
     public interface IExpression
     {
-        double Eval();
+        //double Eval();
+        IValue Eval();
     }
 }

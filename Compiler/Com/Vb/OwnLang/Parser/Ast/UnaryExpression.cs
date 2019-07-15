@@ -1,4 +1,5 @@
-﻿using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+﻿using Compiler.Com.Vb.OwnLang.Lib;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 {
@@ -13,11 +14,21 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             _expr1 = expr1;
         }
 
-        public double Eval()
+        //public double Eval()
+        //{
+        //    switch (_operation)
+        //    {
+        //        case '-': return -_expr1.Eval();
+        //        case '+':
+        //        default:
+        //            return _expr1.Eval();
+        //    }
+        //}
+        public IValue Eval()
         {
             switch (_operation)
             {
-                case '-': return -_expr1.Eval();
+                case '-': return new NumberValue(-_expr1.Eval().AsNumber());
                 case '+':
                 default:
                     return _expr1.Eval();
