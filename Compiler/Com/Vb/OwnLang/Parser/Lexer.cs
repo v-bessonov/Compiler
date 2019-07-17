@@ -7,14 +7,14 @@ namespace Compiler.Com.Vb.OwnLang.Parser
     public sealed class Lexer
     {
 
-        private const string OperatorChars = "+-*/()=";
+        private const string OperatorChars = "+-*/()=<>";
 
         private readonly TokenType[] _operatorTokens =
         {
             TokenType.PLUS, TokenType.MINUS,
             TokenType.STAR, TokenType.SLASH,
             TokenType.LPAREN, TokenType.RPAREN,
-            TokenType.EQ
+            TokenType.EQ, TokenType.LT, TokenType.GT
         };
 
         private readonly string _input;
@@ -147,15 +147,17 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
 
             var word = buffer.ToString();
-            if (word =="print")
-            {
-                AddToken(TokenType.PRINT);
-            }
-            else
-            {
-                AddToken(TokenType.WORD, buffer.ToString());
-            }
             
+            switch (word)
+            {
+                case "print": AddToken(TokenType.PRINT); break;
+                case "if": AddToken(TokenType.IF); break;
+                case "else": AddToken(TokenType.ELSE); break;
+                default:
+                    AddToken(TokenType.WORD, word);
+                    break;
+            }
+
         }
 
         private char Next()

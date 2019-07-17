@@ -6,6 +6,11 @@ namespace Compiler.Com.Vb.OwnLang.Lib
     {
         private readonly double _value;
 
+        public NumberValue(bool value)
+        {
+            _value = value ? 1 : 0;
+        }
+
         public NumberValue(double value)
         {
             _value = value;

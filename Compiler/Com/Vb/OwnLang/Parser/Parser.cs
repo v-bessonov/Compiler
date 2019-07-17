@@ -36,6 +36,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return new PrintStatement(Expression());
             }
+            if (Match(TokenType.IF))
+            {
+                return IfElse();
+            }
             return AssignmentStatement();
         }
 
@@ -51,6 +55,21 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
             throw new Exception("Unknown statement");
         }
+        private IStatement IfElse()
+        {
+            IExpression condition = Expression();
+            IStatement ifStatement = Statement();
+            IStatement elseStatement;
+            if (Match(TokenType.ELSE))
+            {
+                elseStatement = Statement();
+            }
+            else
+            {
+                elseStatement = null;
+            }
+            return new IfStatement(condition, ifStatement, elseStatement);
+        }
 
         //public List<IExpression> Parse()
         //{
@@ -64,7 +83,34 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
         private IExpression Expression()
         {
-            return Additive();
+            return Conditional();
+        }
+
+        private IExpression Conditional()
+        {
+            IExpression result = Additive();
+
+            while (true)
+            {
+                if (Match(TokenType.EQ))
+                {
+                    result = new ConditionalExpression('=', result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.LT))
+                {
+                    result = new ConditionalExpression('<', result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.GT))
+                {
+                    result = new ConditionalExpression('>', result, Additive());
+                    continue;
+                }
+                break;
+            }
+
+            return result;
         }
 
         private IExpression Additive()

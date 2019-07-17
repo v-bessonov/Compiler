@@ -10,12 +10,17 @@
 
         // keyword
         PRINT,
+        IF,
+        ELSE,
 
         PLUS,
         MINUS,
         STAR,
         SLASH,
         EQ,
+        
+        LT,
+        GT,
 
         LPAREN, // (
         RPAREN, // )

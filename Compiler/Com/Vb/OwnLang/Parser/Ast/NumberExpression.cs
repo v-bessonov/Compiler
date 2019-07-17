@@ -8,6 +8,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
         //private readonly double _value;
         private readonly IValue _value;
 
+        
+
         //public NumberExpression(double value)
         //{
         //    _value = value;
