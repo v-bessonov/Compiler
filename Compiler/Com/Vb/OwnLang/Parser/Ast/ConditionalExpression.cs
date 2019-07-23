@@ -7,11 +7,13 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 {
     public class ConditionalExpression : IExpression
     {
+
         private readonly IExpression _expr1;
         private readonly IExpression _expr2;
-        private readonly char _operation;
+        private readonly Operator _operation;
+        private const double TOLERANCE = 0.01;
 
-        public ConditionalExpression(char operation, IExpression expr1, IExpression expr2)
+        public ConditionalExpression(Operator operation, IExpression expr1, IExpression expr2)
         {
             _operation = operation;
             _expr1 = expr1;
@@ -34,38 +36,42 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 
         public IValue Eval()
         {
-            var value1 = _expr1.Eval();
-            var value2 = _expr2.Eval();
-            if (value1 is StringValue)
-            {
-                var string1 = value1.AsString();
-                var string2 = value1.AsString();
-                
+            IValue value1 = _expr1.Eval();
+            IValue value2 = _expr2.Eval();
 
-                switch (_operation)
-                {
-                    case '<': return new NumberValue(string.Compare(string1, string2, StringComparison.Ordinal) < 0);
-                    case '>': return new NumberValue(string.Compare(string1, string2, StringComparison.Ordinal) > 0);
-                    case '=':
-                    default:
-                        return new NumberValue(string1 ==string2);
-                }
+            double number1, number2;
+            if (value1 is StringValue) {
+                number1 = string.Compare(value1.AsString(), value2.AsString(), StringComparison.Ordinal);
+                number2 = 0;
+            } else {
+                number1 = value1.AsNumber();
+                number2 = value2.AsNumber();
             }
-            var number1 = value1.AsNumber();
-            var number2 = value1.AsNumber();
+
+            bool result;
             switch (_operation)
             {
-                case '<': return new NumberValue(number1 < number2);
-                case '>': return new NumberValue(number1 > number2);
-                case '=':
+                case Operator.LT: result = number1 < number2; break;
+                case Operator.LTEQ: result = number1 <= number2; break;
+                case Operator.GT: result = number1 > number2; break;
+                case Operator.GTEQ: result = number1 >= number2; break;
+                case Operator.NOT_EQUALS: result = Math.Abs(number1 - number2) > TOLERANCE; break;
+
+                case Operator.AND: result = (Math.Abs(number1) > TOLERANCE) && (Math.Abs(number2) > TOLERANCE); break;
+                case Operator.OR: result = (Math.Abs(number1) > TOLERANCE) || (Math.Abs(number2) > TOLERANCE); break;
+
+                case Operator.EQUALS:
                 default:
-                    return new NumberValue(Math.Abs(number1 - number2) < 0.01);
+                    result = Math.Abs(number1 - number2) < TOLERANCE; break;
             }
+            return new NumberValue(result);
+
+            
         }
 
 
 
 
-        public override string ToString() => $"[{_expr1} {_operation} {_expr2}]";
+        public override string ToString() => $"[{_expr1} {_operation.GetName()} {_expr2}]";
     }
 }

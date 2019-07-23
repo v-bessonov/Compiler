@@ -83,7 +83,57 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
         private IExpression Expression()
         {
-            return Conditional();
+            return LogicalOr();
+        }
+
+        private IExpression LogicalOr()
+        {
+            IExpression result = LogicalAnd();
+
+            while (true)
+            {
+                if (Match(TokenType.BARBAR))
+                {
+                    result = new ConditionalExpression(Operator.OR, result, LogicalAnd());
+                    continue;
+                }
+                break;
+            }
+
+            return result;
+        }
+
+        private IExpression LogicalAnd()
+        {
+            IExpression result = Equality();
+
+            while (true)
+            {
+                if (Match(TokenType.AMPAMP))
+                {
+                    result = new ConditionalExpression(Operator.AND, result, Equality());
+                    continue;
+                }
+                break;
+            }
+
+            return result;
+        }
+
+        private IExpression Equality()
+        {
+            IExpression result = Conditional();
+
+            if (Match(TokenType.EQEQ))
+            {
+                return new ConditionalExpression(Operator.EQUALS, result, Conditional());
+            }
+            if (Match(TokenType.EXCLEQ))
+            {
+                return new ConditionalExpression(Operator.NOT_EQUALS, result, Conditional());
+            }
+
+            return result;
         }
 
         private IExpression Conditional()
@@ -92,19 +142,25 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
             while (true)
             {
-                if (Match(TokenType.EQ))
-                {
-                    result = new ConditionalExpression('=', result, Additive());
-                    continue;
-                }
+                
                 if (Match(TokenType.LT))
                 {
-                    result = new ConditionalExpression('<', result, Additive());
+                    result = new ConditionalExpression(Operator.LT, result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.LTEQ))
+                {
+                    result = new ConditionalExpression(Operator.LTEQ, result, Additive());
                     continue;
                 }
                 if (Match(TokenType.GT))
                 {
-                    result = new ConditionalExpression('>', result, Additive());
+                    result = new ConditionalExpression(Operator.GT, result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.GTEQ))
+                {
+                    result = new ConditionalExpression(Operator.GTEQ, result, Additive());
                     continue;
                 }
                 break;

@@ -7,14 +7,38 @@ namespace Compiler.Com.Vb.OwnLang.Parser
     public sealed class Lexer
     {
 
-        private const string OperatorChars = "+-*/()=<>";
+        private const string OperatorChars = "+-*/()=<>!&|";
 
-        private readonly TokenType[] _operatorTokens =
+        //private readonly TokenType[] _operatorTokens =
+        //{
+        //    TokenType.PLUS, TokenType.MINUS,
+        //    TokenType.STAR, TokenType.SLASH,
+        //    TokenType.LPAREN, TokenType.RPAREN,
+        //    TokenType.EQ, TokenType.LT, TokenType.GT
+        //};
+
+        private static Dictionary<String, TokenType> OPERATORS = new Dictionary<string, TokenType>()
         {
-            TokenType.PLUS, TokenType.MINUS,
-            TokenType.STAR, TokenType.SLASH,
-            TokenType.LPAREN, TokenType.RPAREN,
-            TokenType.EQ, TokenType.LT, TokenType.GT
+            {"+", TokenType.PLUS },
+            {"-", TokenType.MINUS },
+            {"*", TokenType.STAR },
+            {"/", TokenType.SLASH },
+            {"(", TokenType.LPAREN },
+            {")", TokenType.RPAREN },
+            {"=", TokenType.EQ },
+            {"<", TokenType.LT },
+            {">", TokenType.GT },
+
+            {"!", TokenType.EXCL },
+            {"&", TokenType.AMP },
+            {"|", TokenType.BAR },
+            {"==", TokenType.EQEQ },
+            {"!=", TokenType.EXCLEQ },
+            {"<=", TokenType.LTEQ },
+            {">=", TokenType.GTEQ },
+            {"&&", TokenType.AMPAMP },
+            {"||", TokenType.BARBAR },
+
         };
 
         private readonly string _input;
@@ -57,13 +81,13 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
             return _tokens;
         }
-       
+
 
         private void TokenizeNumber()
         {
             var buffer = new StringBuilder();
             var current = Peek(0);
-            
+
             while (true)
             {
                 if (current == '.')
@@ -127,9 +151,41 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
         private void TokenizeOperator()
         {
-            var position = OperatorChars.IndexOf(Peek(0));
-            AddToken(_operatorTokens[position]);
-            Next();
+            //var position = OperatorChars.IndexOf(Peek(0));
+            //AddToken(_operatorTokens[position]);
+            //Next();
+
+            var current = Peek(0);
+            if (current == '/')
+            {
+                if (Peek(1) == '/')
+                {
+                    Next();
+                    Next();
+                    TokenizeComment();
+                    return;
+                }
+
+                if (Peek(1) == '*')
+                {
+                    Next();
+                    Next();
+                    TokenizeMultilineComment();
+                    return;
+                }
+            }
+            var buffer = new StringBuilder();
+            while (true)
+            {
+                var text = buffer.ToString();
+                if (!OPERATORS.ContainsKey(text + current) && !string.IsNullOrWhiteSpace(text))
+                {
+                    AddToken(OPERATORS[text]);
+                    return;
+                }
+                buffer.Append(current);
+                current = Next();
+            }
         }
 
         private void TokenizeWord()
@@ -147,7 +203,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
 
             var word = buffer.ToString();
-            
+
             switch (word)
             {
                 case "print": AddToken(TokenType.PRINT); break;
@@ -180,6 +236,28 @@ namespace Compiler.Com.Vb.OwnLang.Parser
         private void AddToken(TokenType type, string text)
         {
             _tokens.Add(new Token(type, text));
+        }
+
+        private void TokenizeComment()
+        {
+            var current = Peek(0);
+            while ("\r\n\0".IndexOf(current) == -1)
+            {
+                current = Next();
+            }
+        }
+
+        private void TokenizeMultilineComment()
+        {
+            var current = Peek(0);
+            while (true)
+            {
+                if (current == '\0') throw new Exception("Missing close tag");
+                if (current == '*' && Peek(1) == '/') break;
+                current = Next();
+            }
+            Next(); // *
+            Next(); // /
         }
     }
 }
