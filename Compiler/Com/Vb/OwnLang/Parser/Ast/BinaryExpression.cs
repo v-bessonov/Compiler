@@ -56,7 +56,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
                 }
             }
             var number1 = value1.AsNumber();
-            var number2 = value1.AsNumber();
+            var number2 = value2.AsNumber();
             switch (_operation)
             {
                 case '-': return new NumberValue(number1 - number2);

@@ -44,7 +44,13 @@ namespace Compiler.Com.Vb.OwnLang.Lib
 
         public static void Set(string key, IValue value)
         {
-            _variables.Add(key, value);
+            if (!IsExists(key))
+                _variables.Add(key, value);
+            else
+            {
+                _variables[key] = value;
+            }
+
         }
     }
 

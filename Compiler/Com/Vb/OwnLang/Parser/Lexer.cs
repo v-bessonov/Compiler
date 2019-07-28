@@ -7,7 +7,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
     public sealed class Lexer
     {
 
-        private const string OperatorChars = "+-*/()=<>!&|";
+        private const string OperatorChars = "+-*/(){}=<>!&|,";
 
         //private readonly TokenType[] _operatorTokens =
         //{
@@ -17,7 +17,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
         //    TokenType.EQ, TokenType.LT, TokenType.GT
         //};
 
-        private static Dictionary<String, TokenType> OPERATORS = new Dictionary<string, TokenType>()
+        private static Dictionary<string, TokenType> OPERATORS = new Dictionary<string, TokenType>()
         {
             {"+", TokenType.PLUS },
             {"-", TokenType.MINUS },
@@ -25,9 +25,12 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {"/", TokenType.SLASH },
             {"(", TokenType.LPAREN },
             {")", TokenType.RPAREN },
+            {"{", TokenType.LBRACE },
+            {"}", TokenType.RBRACE },
             {"=", TokenType.EQ },
             {"<", TokenType.LT },
             {">", TokenType.GT },
+            {",", TokenType.COMMA },
 
             {"!", TokenType.EXCL },
             {"&", TokenType.AMP },
@@ -209,6 +212,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser
                 case "print": AddToken(TokenType.PRINT); break;
                 case "if": AddToken(TokenType.IF); break;
                 case "else": AddToken(TokenType.ELSE); break;
+                case "while": AddToken(TokenType.WHILE); break;
+                case "for": AddToken(TokenType.FOR); break;
                 default:
                     AddToken(TokenType.WORD, word);
                     break;

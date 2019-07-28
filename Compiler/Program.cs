@@ -31,15 +31,19 @@ namespace Compiler
             //    Console.WriteLine($"{expr} = {expr.Eval()}");
             //}
 
-            var statements = new Parser(tokens).Parse();
-            foreach (var statement in statements)
-            {
-                Console.WriteLine(statement);
-            }
-            foreach (var statement in statements)
-            {
-                statement.Execute();
-            }
+            //var statements = new Parser(tokens).Parse();
+            //foreach (var statement in statements)
+            //{
+            //    Console.WriteLine(statement);
+            //}
+            //foreach (var statement in statements)
+            //{
+            //    statement.Execute();
+            //}
+
+            var program = new Parser(tokens).Parse();
+            Console.WriteLine(program.ToString());
+            program.Execute();
 
 
             //Console.WriteLine($"word = {Variables.Get("word")}");

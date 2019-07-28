@@ -12,6 +12,9 @@
         PRINT,
         IF,
         ELSE,
+        WHILE,
+        FOR,
+
 
         PLUS,
         MINUS,
@@ -33,6 +36,9 @@
 
         LPAREN, // (
         RPAREN, // )
+        LBRACE, // {
+        RBRACE, // }
+        COMMA, // ,
 
         EOF
     }

@@ -20,14 +20,32 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             _size = tokens.Count;
         }
 
-        public List<IStatement> Parse()
+        public IStatement Parse()
+        //public List<IStatement> Parse()
         {
-            List<IStatement> result = new List<IStatement>();
+            //List<IStatement> result = new List<IStatement>();
+            //while (!Match(TokenType.EOF))
+            //{
+            //    result.Add(Statement());
+            //}
+            //return result;
+            BlockStatement result = new BlockStatement();
             while (!Match(TokenType.EOF))
             {
                 result.Add(Statement());
             }
             return result;
+        }
+
+        private IStatement Block()
+        {
+            BlockStatement block = new BlockStatement();
+            Consume(TokenType.LBRACE);
+            while (!Match(TokenType.RBRACE))
+            {
+                block.Add(Statement());
+            }
+            return block;
         }
 
         private IStatement Statement()
@@ -40,7 +58,21 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return IfElse();
             }
+            if (Match(TokenType.WHILE))
+            {
+                return WhileStatement();
+            }
+            if (Match(TokenType.FOR))
+            {
+                return ForStatement();
+            }
             return AssignmentStatement();
+        }
+
+        private IStatement StatementOrBlock()
+        {
+            if (Get(0).Type == TokenType.LBRACE) return Block();
+            return Statement();
         }
 
         private IStatement AssignmentStatement()
@@ -58,17 +90,35 @@ namespace Compiler.Com.Vb.OwnLang.Parser
         private IStatement IfElse()
         {
             IExpression condition = Expression();
-            IStatement ifStatement = Statement();
+            IStatement ifStatement = StatementOrBlock();
             IStatement elseStatement;
             if (Match(TokenType.ELSE))
             {
-                elseStatement = Statement();
+                elseStatement = StatementOrBlock();
             }
             else
             {
                 elseStatement = null;
             }
             return new IfStatement(condition, ifStatement, elseStatement);
+        }
+
+        private IStatement WhileStatement()
+        {
+            var condition = Expression();
+            var statement = StatementOrBlock();
+            return new WhileStatement(condition, statement);
+        }
+
+        private IStatement ForStatement()
+        {
+            IStatement init = AssignmentStatement();
+            Consume(TokenType.COMMA);
+            IExpression termination = Expression();
+            Consume(TokenType.COMMA);
+            IStatement increment = AssignmentStatement();
+            IStatement statement = StatementOrBlock();
+            return new ForStatement(init, termination, increment, statement);
         }
 
         //public List<IExpression> Parse()
