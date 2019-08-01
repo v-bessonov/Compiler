@@ -37,7 +37,7 @@ namespace Compiler
             //    Console.WriteLine(statement);
             //}
             //foreach (var statement in statements)
-            //{
+            //{s
             //    statement.Execute();
             //}
 

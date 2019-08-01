@@ -3,26 +3,22 @@ using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 {
-    public class ForStatement : IStatement
+    public class DoWhileStatement : IStatement
     {
-        private readonly IStatement _init;
-        private readonly IExpression _termination;
-        private readonly IStatement _increment;
+        private readonly IExpression _condition;
         private readonly IStatement _statement;
 
-        public ForStatement(IStatement init, IExpression termination, IStatement increment, IStatement block)
+        public DoWhileStatement(IExpression condition, IStatement statement)
         {
-            _init = init;
-            _termination = termination;
-            _increment = increment;
-            _statement = block;
+            _condition = condition;
+            _statement = statement;
         }
+
 
         public void Execute()
         {
-            for (_init.Execute(); Math.Abs(_termination.Eval().AsNumber()) > 0.01; _increment.Execute())
+            do
             {
-               
                 try
                 {
                     _statement.Execute();
@@ -35,13 +31,14 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
                 {
                     continue;
                 }
-
             }
+            while (Math.Abs(_condition.Eval().AsNumber()) > 0.01);
         }
+
 
         public override string ToString()
         {
-            return $"for {_init}, {_termination}, {_increment} {_statement}";
+            return $"do {_statement} while {_condition}";
         }
     }
 }

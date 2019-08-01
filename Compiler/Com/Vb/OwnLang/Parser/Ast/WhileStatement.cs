@@ -1,7 +1,7 @@
 ﻿using System;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 {
     public class WhileStatement : IStatement
     {
@@ -14,16 +14,29 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             _statement = statement;
         }
 
-        
+
         public void Execute()
         {
             while (Math.Abs(_condition.Eval().AsNumber()) > 0.01)
             {
-                _statement.Execute();
+
+                try
+                {
+                    _statement.Execute();
+                }
+                catch (BreakStatement bs)
+                {
+                    break;
+                }
+                catch (ContinueStatement cs)
+                {
+                    continue;
+                }
+
             }
         }
 
-        
+
         public override string ToString()
         {
             return $"while {_condition} {_statement}";

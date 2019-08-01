@@ -62,6 +62,18 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return WhileStatement();
             }
+            if (Match(TokenType.DO))
+            {
+                return DoWhileStatement();
+            }
+            if (Match(TokenType.BREAK))
+            {
+                return new BreakStatement();
+            }
+            if (Match(TokenType.CONTINUE))
+            {
+                return new ContinueStatement();
+            }
             if (Match(TokenType.FOR))
             {
                 return ForStatement();
@@ -108,6 +120,14 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             var condition = Expression();
             var statement = StatementOrBlock();
             return new WhileStatement(condition, statement);
+        }
+
+        private IStatement DoWhileStatement()
+        {
+            IStatement statement = StatementOrBlock();
+            Consume(TokenType.WHILE);
+            IExpression condition = Expression();
+            return new DoWhileStatement(condition, statement);
         }
 
         private IStatement ForStatement()
