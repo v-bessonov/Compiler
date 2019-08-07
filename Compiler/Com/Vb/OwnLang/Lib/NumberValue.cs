@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Lib
 {

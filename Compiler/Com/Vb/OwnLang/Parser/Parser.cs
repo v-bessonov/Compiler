@@ -78,6 +78,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return ForStatement();
             }
+            if (Get(0).Type == TokenType.WORD && Get(1).Type == TokenType.LPAREN)
+            {
+                return new FunctionStatement(Function());
+            }
             return AssignmentStatement();
         }
 
@@ -139,6 +143,19 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             IStatement increment = AssignmentStatement();
             IStatement statement = StatementOrBlock();
             return new ForStatement(init, termination, increment, statement);
+        }
+
+        private FunctionalExpression Function()
+        {
+            String name = Consume(TokenType.WORD).Text;
+            Consume(TokenType.LPAREN);
+            FunctionalExpression function = new FunctionalExpression(name);
+            while (!Match(TokenType.RPAREN))
+            {
+                function.AddArgument(Expression());
+                Match(TokenType.COMMA);
+            }
+            return function;
         }
 
         //public List<IExpression> Parse()
@@ -320,6 +337,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             //{
             //    return new ConstantExpression(current.Text);
             //}
+            if (Get(0).Type == TokenType.WORD && Get(1).Type == TokenType.LPAREN)
+            {
+                return Function();
+            }
             if (Match(TokenType.WORD))
             {
                 return new VariableExpression(current.Text);

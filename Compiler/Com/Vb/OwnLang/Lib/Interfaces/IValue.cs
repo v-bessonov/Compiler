@@ -1,4 +1,4 @@
-﻿namespace Compiler.Com.Vb.OwnLang.Lib
+﻿namespace Compiler.Com.Vb.OwnLang.Lib.Interfaces
 {
     public interface IValue
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Lib
 {

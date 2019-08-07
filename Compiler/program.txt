@@ -23,7 +23,7 @@ if (40 < 50 || 50 > 60) {
     while (i < 10) {
         i = i + 1
 		/*if i == 4 continue*/
-		print "i = " + i + "\n"
+		print "i = " + i + sin(i) + "\n"
     }
 	print "for\n"
 	for i = 0, i < 10, i = i + 1 {
@@ -33,3 +33,6 @@ if (40 < 50 || 50 > 60) {
 	
 }
 else print "false"
+
+print "sin(PI) = " + sin(PI/2)
+echo(1,2,3,"4","5","text",sin(0),cos(0),sin(PI),cos(PI),PI)
