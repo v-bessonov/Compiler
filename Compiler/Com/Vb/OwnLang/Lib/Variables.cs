@@ -7,6 +7,7 @@ namespace Compiler.Com.Vb.OwnLang.Lib
     public class Variables
     {
         private static  NumberValue ZERO = new NumberValue(0);
+        private static  Stack<Dictionary<String, IValue>> stack = new Stack<Dictionary<string, IValue>>();
         //private static readonly Dictionary<string, double> _variables = new Dictionary<string, double>
         //{
         //    {"PI", Math.PI },
@@ -15,7 +16,17 @@ namespace Compiler.Com.Vb.OwnLang.Lib
         //    {"GOLDEN_RATIO", 1.618 }
         //};
 
-        private static readonly Dictionary<string, IValue> _variables = new Dictionary<string, IValue>
+        public static void Push()
+        {
+            stack.Push(new Dictionary<String, IValue>(_variables));
+        }
+
+        public static void Pop()
+        {
+            _variables = stack.Pop();
+        }
+
+        private static Dictionary<string, IValue> _variables = new Dictionary<string, IValue>
         {
             {"PI", new NumberValue(Math.PI)},
             {"ПИ", new NumberValue(Math.PI )},

@@ -74,9 +74,17 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {
                 return new ContinueStatement();
             }
+            if (Match(TokenType.RETURN))
+            {
+                return new ReturnStatement(Expression());
+            }
             if (Match(TokenType.FOR))
             {
                 return ForStatement();
+            }
+            if (Match(TokenType.DEF))
+            {
+                return FunctionDefine();
             }
             if (Get(0).Type == TokenType.WORD && Get(1).Type == TokenType.LPAREN)
             {
@@ -144,12 +152,24 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             IStatement statement = StatementOrBlock();
             return new ForStatement(init, termination, increment, statement);
         }
-
+        private FunctionDefineStatement FunctionDefine()
+        {
+            var name = Consume(TokenType.WORD).Text;
+            Consume(TokenType.LPAREN);
+            var argNames = new List<string>();
+            while (!Match(TokenType.RPAREN))
+            {
+                argNames.Add(Consume(TokenType.WORD).Text);
+                Match(TokenType.COMMA);
+            }
+            var body = StatementOrBlock();
+            return new FunctionDefineStatement(name, argNames, body);
+        }
         private FunctionalExpression Function()
         {
-            String name = Consume(TokenType.WORD).Text;
+            var name = Consume(TokenType.WORD).Text;
             Consume(TokenType.LPAREN);
-            FunctionalExpression function = new FunctionalExpression(name);
+            var function = new FunctionalExpression(name);
             while (!Match(TokenType.RPAREN))
             {
                 function.AddArgument(Expression());
@@ -229,7 +249,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
 
             while (true)
             {
-                
+
                 if (Match(TokenType.LT))
                 {
                     result = new ConditionalExpression(Operator.LT, result, Additive());

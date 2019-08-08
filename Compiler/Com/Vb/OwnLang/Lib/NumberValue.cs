@@ -5,6 +5,7 @@ namespace Compiler.Com.Vb.OwnLang.Lib
 {
     public class NumberValue : IValue
     {
+        public static NumberValue ZERO = new NumberValue(0);
         private readonly double _value;
 
         public NumberValue(bool value)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
@@ -35,7 +36,22 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             {
                 values[i] = _arguments[i].Eval();
             }
-            return Functions.Get(_name).Execute(values);
+
+
+            var function = Functions.Get(_name);
+            if (function is UserDefinedFunction userFunction) {
+                if (size != userFunction.GetArgsCount()) throw new Exception("Args count mismatch");
+
+                Variables.Push();
+                for (int i = 0; i < size; i++)
+                {
+                    Variables.Set(userFunction.GetArgsName(i), values[i]);
+                }
+                IValue result = userFunction.Execute(values);
+                Variables.Pop();
+                return result;
+            }
+            return function.Execute(values);
         }
 
         public override string ToString()
