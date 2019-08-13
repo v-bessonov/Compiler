@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Compiler.Com.Vb.OwnLang.Parser.Ast;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Statements;
 
 namespace Compiler.Com.Vb.OwnLang.Parser
 {
@@ -103,11 +105,28 @@ namespace Compiler.Com.Vb.OwnLang.Parser
         {
             // WORD EQ
             var current = Get(0);
-            if (Match(TokenType.WORD) && Get(0).Type == TokenType.EQ)
+            /*if (Match(TokenType.WORD) && Get(0).Type == TokenType.EQ)
             {
                 var variable = current.Text;
                 Consume(TokenType.EQ);
                 return new AssignmentStatement(variable, Expression());
+            }*/
+
+
+            if (LookMatch(0, TokenType.WORD) && LookMatch(1, TokenType.EQ))
+            {
+                var variable = Consume(TokenType.WORD).Text;
+                Consume(TokenType.EQ);
+                return new AssignmentStatement(variable, Expression());
+            }
+            if (LookMatch(0, TokenType.WORD) && LookMatch(1, TokenType.LBRACKET))
+            {
+                var variable = Consume(TokenType.WORD).Text;
+                Consume(TokenType.LBRACKET);
+                var index = Expression();
+                Consume(TokenType.RBRACKET);
+                Consume(TokenType.EQ);
+                return new ArrayAssignmentStatement(variable, index, Expression());
             }
             throw new Exception("Unknown statement");
         }
@@ -176,6 +195,27 @@ namespace Compiler.Com.Vb.OwnLang.Parser
                 Match(TokenType.COMMA);
             }
             return function;
+        }
+
+        private IExpression Array()
+        {
+            Consume(TokenType.LBRACKET);
+            List<IExpression> elements = new List<IExpression>();
+            while (!Match(TokenType.RBRACKET))
+            {
+                elements.Add(Expression());
+                Match(TokenType.COMMA);
+            }
+            return new ArrayExpression(elements);
+        }
+
+        private IExpression Element()
+        {
+            var variable = Consume(TokenType.WORD).Text;
+            Consume(TokenType.LBRACKET);
+            var index = Expression();
+            Consume(TokenType.RBRACKET);
+            return new ArrayAccessExpression(variable, index);
         }
 
         //public List<IExpression> Parse()
@@ -357,10 +397,23 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             //{
             //    return new ConstantExpression(current.Text);
             //}
-            if (Get(0).Type == TokenType.WORD && Get(1).Type == TokenType.LPAREN)
+            //if (Get(0).Type == TokenType.WORD && Get(1).Type == TokenType.LPAREN)
+            //{
+            //    return Function();
+            //}
+            if (LookMatch(0, TokenType.WORD) && LookMatch(1, TokenType.LPAREN))
             {
                 return Function();
             }
+            if (LookMatch(0, TokenType.WORD) && LookMatch(1, TokenType.LBRACKET))
+            {
+                return Element();
+            }
+            if (LookMatch(0, TokenType.LBRACKET))
+            {
+                return Array();
+            }
+
             if (Match(TokenType.WORD))
             {
                 return new VariableExpression(current.Text);
@@ -392,6 +445,10 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             if (type != current.Type) throw new Exception($"Token {current} doesn\'t match {type}");
             _pos++;
             return current;
+        }
+        private bool LookMatch(int pos, TokenType type)
+        {
+            return Get(pos).Type == type;
         }
 
         private Token Get(int relativePosition)

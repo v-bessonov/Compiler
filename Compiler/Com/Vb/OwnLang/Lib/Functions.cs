@@ -11,7 +11,8 @@ namespace Compiler.Com.Vb.OwnLang.Lib
         {
             {"sin", new SinFunction()},
             {"cos", new CosFunction()},
-            {"echo", new EchoFunction()}
+            {"echo", new EchoFunction()},
+            {"newarray", new NewArrayFunction()}
         };
 
         

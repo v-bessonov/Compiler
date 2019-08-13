@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
+using Compiler.Com.Vb.OwnLang.Lib.Values;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
 namespace Compiler.Com.Vb.OwnLang.Parser.Ast
@@ -36,7 +37,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
         {
             var value1 = _expr1.Eval();
             var value2 = _expr2.Eval();
-            if (value1 is StringValue)
+            if (value1 is StringValue || value1 is ArrayValue)
             {
                 string string1 = value1.AsString();
                 switch (_operation)

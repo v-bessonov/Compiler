@@ -7,7 +7,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser
     public sealed class Lexer
     {
 
-        private const string OperatorChars = "+-*/(){}=<>!&|,";
+        private const string OperatorChars = "+-*/()[]{}=<>!&|,";
 
         //private readonly TokenType[] _operatorTokens =
         //{
@@ -25,6 +25,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             {"/", TokenType.SLASH },
             {"(", TokenType.LPAREN },
             {")", TokenType.RPAREN },
+            {"[", TokenType.LBRACKET },
+            {"]", TokenType.RBRACKET },
             {"{", TokenType.LBRACE },
             {"}", TokenType.RBRACE },
             {"=", TokenType.EQ },
