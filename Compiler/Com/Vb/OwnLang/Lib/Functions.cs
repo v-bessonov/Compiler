@@ -28,7 +28,7 @@ namespace Compiler.Com.Vb.OwnLang.Lib
             return _functions[key];
         }
 
-        public static void Set(String key, IFunction function)
+        public static void Set(string key, IFunction function)
         {
             if (!IsExists(key))
                 _functions.Add(key, function);

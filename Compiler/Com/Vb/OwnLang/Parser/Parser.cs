@@ -121,12 +121,9 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             }
             if (LookMatch(0, TokenType.WORD) && LookMatch(1, TokenType.LBRACKET))
             {
-                var variable = Consume(TokenType.WORD).Text;
-                Consume(TokenType.LBRACKET);
-                var index = Expression();
-                Consume(TokenType.RBRACKET);
+                var array = Element();
                 Consume(TokenType.EQ);
-                return new ArrayAssignmentStatement(variable, index, Expression());
+                return new ArrayAssignmentStatement(array, Expression());
             }
             throw new Exception("Unknown statement");
         }
@@ -209,13 +206,19 @@ namespace Compiler.Com.Vb.OwnLang.Parser
             return new ArrayExpression(elements);
         }
 
-        private IExpression Element()
+        private ArrayAccessExpression Element()
         {
+
             var variable = Consume(TokenType.WORD).Text;
-            Consume(TokenType.LBRACKET);
-            var index = Expression();
-            Consume(TokenType.RBRACKET);
-            return new ArrayAccessExpression(variable, index);
+            var indices = new List<IExpression>();
+            do
+            {
+                Consume(TokenType.LBRACKET);
+                indices.Add(Expression());
+                Consume(TokenType.RBRACKET);
+            } while (LookMatch(0, TokenType.LBRACKET));
+            return new ArrayAccessExpression(variable, indices);
+
         }
 
         //public List<IExpression> Parse()
