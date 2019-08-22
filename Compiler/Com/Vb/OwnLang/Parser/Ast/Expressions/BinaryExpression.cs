@@ -4,12 +4,12 @@ using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Lib.Values;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class BinaryExpression : IExpression
     {
-        private readonly IExpression _expr1;
-        private readonly IExpression _expr2;
+        public readonly IExpression _expr1;
+        public readonly IExpression _expr2;
         private readonly char _operation;
 
         public BinaryExpression(char operation, IExpression expr1, IExpression expr2)
@@ -72,6 +72,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 
 
 
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString() => $"[{_expr1} {_operation} {_expr2}]";
     }

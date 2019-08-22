@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Compiler.Com.Vb.OwnLang.Parser.Ast;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Operators;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Statements;
 
 namespace Compiler.Com.Vb.OwnLang.Parser

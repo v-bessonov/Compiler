@@ -3,7 +3,7 @@ using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class ConstantExpression : IExpression
     {
@@ -31,6 +31,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             if (!Constants.IsExists(_name)) throw new Exception("Constant does not exists");
             return Constants.Get(_name);
         }
+
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString() => $"{_name}";
     }

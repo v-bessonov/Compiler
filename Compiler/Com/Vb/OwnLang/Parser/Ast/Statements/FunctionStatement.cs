@@ -1,10 +1,11 @@
-﻿using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+﻿using Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class FunctionStatement : IStatement
     {
-        private readonly FunctionalExpression _function;
+        public readonly FunctionalExpression _function;
     
         public FunctionStatement(FunctionalExpression function)
         {
@@ -15,7 +16,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
         {
             _function.Eval();
         }
-        
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string ToString()
         {
             return _function.ToString();

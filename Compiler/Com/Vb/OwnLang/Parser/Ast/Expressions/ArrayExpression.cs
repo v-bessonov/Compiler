@@ -7,7 +7,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class ArrayExpression : IExpression
     {
-        private readonly List<IExpression> _elements;
+        public readonly List<IExpression> _elements;
 
         public ArrayExpression(List<IExpression> arguments)
         {
@@ -24,7 +24,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
             }
             return array;
         }
-
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string ToString()
         {
             return _elements.ToString();

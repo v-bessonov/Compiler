@@ -2,13 +2,13 @@
 using System.Text;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class IfStatement : IStatement
     {
-        private readonly IExpression _expression;
-        private readonly IStatement _ifStatement;
-        private readonly IStatement _elseStatement;
+        public readonly IExpression _expression;
+        public readonly IStatement _ifStatement;
+        public readonly IStatement _elseStatement;
 
         public IfStatement(IExpression expression, IStatement ifStatement, IStatement elseStatement)
         {
@@ -29,6 +29,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
                 _elseStatement?.Execute();
             }
         }
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString()
         {

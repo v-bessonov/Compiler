@@ -1,12 +1,12 @@
 ﻿using System;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class WhileStatement : IStatement
     {
-        private readonly IExpression _condition;
-        private readonly IStatement _statement;
+        public readonly IExpression _condition;
+        public readonly IStatement _statement;
 
         public WhileStatement(IExpression condition, IStatement statement)
         {
@@ -36,6 +36,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             }
         }
 
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString()
         {

@@ -1,7 +1,7 @@
 ﻿namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces
 {
-    public interface IStatement : INode
+    public interface INode
     {
-        void Execute();
+         void Accept(IVisitor visitor);
     }
 }

@@ -5,8 +5,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class ArrayAssignmentStatement : IStatement
     {
-        private readonly ArrayAccessExpression _array;
-        private readonly IExpression _expression;
+        public readonly ArrayAccessExpression _array;
+        public readonly IExpression _expression;
 
         public ArrayAssignmentStatement(ArrayAccessExpression array, IExpression expression)
         {
@@ -20,7 +20,9 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
             _array.GetArray().Set(_array.LastIndex(), _expression.Eval());
         }
 
-        
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
+
+
         public override string ToString()
         {
             return $"{_array} = {_expression}";

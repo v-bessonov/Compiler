@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class BlockStatement : IStatement
     {
-        private readonly List<IStatement> _statements;
+        public readonly List<IStatement> _statements;
 
         public BlockStatement()
         {
@@ -28,6 +28,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             }
 
         }
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString()
         {

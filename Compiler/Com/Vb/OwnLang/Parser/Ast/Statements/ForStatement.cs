@@ -1,14 +1,14 @@
 ﻿using System;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class ForStatement : IStatement
     {
-        private readonly IStatement _init;
-        private readonly IExpression _termination;
-        private readonly IStatement _increment;
-        private readonly IStatement _statement;
+        public readonly IStatement _init;
+        public readonly IExpression _termination;
+        public readonly IStatement _increment;
+        public readonly IStatement _statement;
 
         public ForStatement(IStatement init, IExpression termination, IStatement increment, IStatement block)
         {
@@ -38,7 +38,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
 
             }
         }
-
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string ToString()
         {
             return $"for {_init}, {_termination}, {_increment} {_statement}";

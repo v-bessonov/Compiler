@@ -1,4 +1,4 @@
-﻿namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+﻿namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Operators
 {
 
     public enum Operator

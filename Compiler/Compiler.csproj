@@ -6,7 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="program.txt">
+    <None Update="visitor.own">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="program.own">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

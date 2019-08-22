@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class FunctionalExpression : IExpression
     {
         private readonly string _name;
-        private readonly List<IExpression> _arguments;
+        public readonly List<IExpression> _arguments;
 
         public FunctionalExpression(string name)
         {
@@ -54,9 +55,11 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             return function.Execute(values);
         }
 
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
+
         public override string ToString()
         {
-            return $"{_name}({_arguments})";
+            return $"{_name}({string.Join(", ", _arguments.Select(i => i.ToString()).ToArray())})";
         }
     }
 }

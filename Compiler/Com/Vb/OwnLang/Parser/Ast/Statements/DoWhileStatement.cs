@@ -1,12 +1,12 @@
 ﻿using System;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Statements
 {
     public class DoWhileStatement : IStatement
     {
-        private readonly IExpression _condition;
-        private readonly IStatement _statement;
+        public readonly IExpression _condition;
+        public readonly IStatement _statement;
 
         public DoWhileStatement(IExpression condition, IStatement statement)
         {
@@ -35,6 +35,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
             while (Math.Abs(_condition.Eval().AsNumber()) > 0.01);
         }
 
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString()
         {

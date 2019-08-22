@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Text;
 using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Operators;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class ConditionalExpression : IExpression
     {
 
-        private readonly IExpression _expr1;
-        private readonly IExpression _expr2;
+        public readonly IExpression _expr1;
+        public readonly IExpression _expr2;
         private readonly Operator _operation;
         private const double TOLERANCE = 0.01;
 
@@ -71,7 +71,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
         }
 
 
-
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
 
         public override string ToString() => $"[{_expr1} {_operation.GetName()} {_expr2}]";
     }

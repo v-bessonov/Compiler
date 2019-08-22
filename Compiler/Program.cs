@@ -5,6 +5,7 @@ using Compiler.Com.Vb.OwnLang.Lib;
 using Compiler.Com.Vb.OwnLang.Parser;
 using Compiler.Com.Vb.OwnLang.Parser.Ast;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
+using Compiler.Com.Vb.OwnLang.Parser.Ast.Visitors;
 
 namespace Compiler
 {
@@ -17,8 +18,9 @@ namespace Compiler
             //const string input3 = "(GOLDEN_RATIO + 2) * #f";
             //const string input4 = "GOLDEN_RATIO";
             //const string input5 = "word = 2 + 2\nword2 = PI + word\nprint word";
-            var input5 = File.ReadAllText("program.txt");
-            var tokens = new Lexer(input5).Tokenize();
+            //var input5 = File.ReadAllText("program.own");
+            var input6 = File.ReadAllText("visitor.own");
+            var tokens = new Lexer(input6).Tokenize();
             
             foreach (var token in tokens)
             {
@@ -43,6 +45,9 @@ namespace Compiler
 
             var program = new Parser(tokens).Parse();
             Console.WriteLine(program.ToString());
+            program.Accept(new FunctionAdder());
+            program.Accept(new VariablePrinter());
+            program.Accept(new AssignValidator());
             program.Execute();
 
 

@@ -2,11 +2,11 @@
 using Compiler.Com.Vb.OwnLang.Lib.Interfaces;
 using Compiler.Com.Vb.OwnLang.Parser.Ast.Interfaces;
 
-namespace Compiler.Com.Vb.OwnLang.Parser.Ast
+namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class UnaryExpression : IExpression
     {
-        private readonly IExpression _expr1;
+        public readonly IExpression _expr1;
         private readonly char _operation;
 
         public UnaryExpression(char operation, IExpression expr1)
@@ -35,7 +35,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast
                     return _expr1.Eval();
             }
         }
-
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string ToString() => $"{_operation} {_expr1}";
     }
 }

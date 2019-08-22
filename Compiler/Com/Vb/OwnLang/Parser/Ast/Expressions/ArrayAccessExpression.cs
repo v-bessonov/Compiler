@@ -9,8 +9,8 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
 {
     public class ArrayAccessExpression : IExpression
     {
-        private readonly string _variable;
-        private readonly List<IExpression> _indices;
+        public readonly string _variable;
+        public readonly List<IExpression> _indices;
 
         public ArrayAccessExpression(string variable, List<IExpression> indices)
         {
@@ -52,7 +52,7 @@ namespace Compiler.Com.Vb.OwnLang.Parser.Ast.Expressions
             }
             throw new Exception("Array expected");
         }
-
+        public void Accept(IVisitor visitor) => visitor.Visit(this);
         public override string ToString() => $"{_variable}{_variable}";
     }
 }
